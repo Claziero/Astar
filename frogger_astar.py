@@ -70,25 +70,7 @@ class frogger_game:
     def step(self, action):
         lose = False
         win = False
-        r1 = collections.deque(self.state_matrix[1])
-        r2 = collections.deque(self.state_matrix[2])
-        r3 = collections.deque(self.state_matrix[3])
-        r4 = collections.deque(self.state_matrix[4])
-        r5 = collections.deque(self.state_matrix[5])
-        r6 = collections.deque(self.state_matrix[6])
-        r1.rotate(1)
-        r2.rotate(1)
-        r3.rotate(-1)
-        r4.rotate(-1)
-        r5.rotate(1)
-        r6.rotate(1)
-        r1 = list(r1)
-        r2 = list(r2)
-        r3 = list(r3)
-        r4 = list(r4)
-        r5 = list(r5)
-        r6 = list(r6)
-        self.state_matrix = np.asarray([self.state_matrix[0], r1, r2, r3, r4, r5, r6, self.state_matrix[7]])
+        self.aggiorna_campo(1)
 
         if (action == 1):
             self.frog_pos = (self.frog_pos[0], max(0, self.frog_pos[1] - 1))
@@ -320,7 +302,6 @@ def main():
     clock = pygame.time.Clock()
     run = True
     game = frogger_game()
-    #rate = 0
     lost = False
     win = False
     while run:
