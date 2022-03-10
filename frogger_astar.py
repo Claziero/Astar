@@ -1,4 +1,5 @@
 from queue import PriorityQueue
+from random import random
 from time import sleep
 import pygame
 import numpy as np
@@ -24,6 +25,7 @@ esplorare = PriorityQueue()
 visitati = PriorityQueue()
 #Costante costo
 COSTO = 1
+t = 0
 
 #Classe Nodo
 class Nodo():
@@ -175,7 +177,7 @@ class frogger_game:
 
     def a_star_path_to_actions(self):
         if not self.path:
-            self.__init__()
+            #self.__init__()
             self.path = self.A_star_agent()
             self.path.pop(0)
 
@@ -304,6 +306,11 @@ def main():
     game = frogger_game()
     lost = False
     win = False
+
+    t = int(random() * 8 + 1)
+    print("Random:", t)
+    game.aggiorna_campo(t)
+
     while run:
         clock.tick(FPS)
         if ((not lost) and (not win)):
@@ -320,7 +327,7 @@ def main():
             #action = game.simple_reactive()
             action = game.a_star_path_to_actions()
             
-            time.sleep(0.1)
+            time.sleep(0.3)
             lost, win = game.step(action)
 
 main()
