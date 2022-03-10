@@ -41,7 +41,7 @@ class Nodo():
     #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione
     def __eq__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
-        return self.posizione == altro.posizione and self.tempo == altro.tempo
+        return self.posizione == altro.posizione and self.h == altro.h
 
     #Ridefinizione del concetto di minore tra nodi: devono essere ad una riga superiore
     def __lt__(self, altro):
@@ -56,7 +56,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -161,10 +161,10 @@ class frogger_game:
         #Ripristina lo stato precedente del gioco
         self.aggiorna_campo(-nodo_corrente.tempo - 1)
 
-        #print("Lista adiacenze:")
-        #for a in adjac_lis:
-        #    print(nodo_corrente.posizione, "->", a.posizione, end="|")
-        #print()
+        print("Lista adiacenze:")
+        for a in adjac_lis:
+            print(nodo_corrente.posizione, "->", a.posizione, end="|")
+        print()
 
         return adjac_lis
 
@@ -326,8 +326,13 @@ def main():
         if ((not lost) and (not win)):
             #action = game.simple_reactive()
             action = game.a_star_path_to_actions()
+
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                    pygame.quit()
             
-            time.sleep(0.3)
+            time.sleep(0.5)
             lost, win = game.step(action)
 
 main()
