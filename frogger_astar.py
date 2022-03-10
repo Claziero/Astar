@@ -28,22 +28,23 @@ COSTO = 1
 #Classe Nodo
 class Nodo():
     #Costruttore
-    def __init__(self, pos = None, precedente = None) -> None:
+    def __init__(self, pos = None, precedente = None, tempo = 0) -> None:
         self.g = 0
         self.h = 0
         self.f = 0
         self.posizione = pos
         self.precedente = precedente
+        self.tempo = tempo
 
     #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione
     def __eq__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
-        return self.posizione == altro.posizione
+        return self.posizione == altro.posizione and self.tempo == altro.tempo
 
     #Ridefinizione del concetto di minore tra nodi: devono essere ad una riga superiore
     def __lt__(self, altro):
         assert(isinstance(altro, Nodo))
-        return self.posizione[0] < altro.posizione[0]
+        return self.f < altro.f
 
     #Funzione per definire uno stato obiettivo
     def obiettivo(self) -> bool:
@@ -118,7 +119,7 @@ class frogger_game:
         return action
 
     #Funzione per aggiornare il campo scorrendo nelle due direzioni
-    def aggiorna_campo(self, incremento):
+    def aggiorna_campo(self, incremento) -> None:
         r1 = collections.deque(self.state_matrix[1])
         r2 = collections.deque(self.state_matrix[2])
         r3 = collections.deque(self.state_matrix[3])
@@ -149,6 +150,8 @@ class frogger_game:
     def get_neighbors(self, nodo_corrente:Nodo):
         adjac_lis = []
 
+        self.aggiorna_campo(nodo_corrente.tempo + 1)
+
         #Per ogni azione disponibile
         for action in range(5):
             if(action == 0):    #NONE
@@ -163,17 +166,16 @@ class frogger_game:
                 pos = (min(7, nodo_corrente.posizione[0] + 1), nodo_corrente.posizione[1])
 
             #Prova la mossa scelta
-            self.aggiorna_campo(1)
             mossa_buona = self.controlla_pos(pos)
             
             #Se l'azione non porta alla perdita, aggiungi un nuovo nodo alla lista dei vicini
             if(mossa_buona):
                 #Imposta un nuovo nodo con la sua posizione e aggiungilo alla lista adiacenti
-                n = Nodo(pos, nodo_corrente)
+                n = Nodo(pos, nodo_corrente, nodo_corrente.tempo + 1)
                 adjac_lis.append(n)
 
-            #Ripristina lo stato precedente del gioco
-            self.aggiorna_campo(-1)
+        #Ripristina lo stato precedente del gioco
+        self.aggiorna_campo(-nodo_corrente.tempo - 1)
 
         #print("Lista adiacenze:")
         #for a in adjac_lis:
@@ -221,8 +223,6 @@ class frogger_game:
             nodo_corrente = esplorare.get()[1]
             #E inseriscilo nella lista di nodi visitati
             visitati.put(nodo_corrente) 
-            #Per ogni nodo visitato fai scorrere il campo
-            self.aggiorna_campo(1)
 
             #Se il nodo corrente corrisponde all'obiettivo allora riporta il percorso fatto
             if(nodo_corrente.obiettivo()):
@@ -243,8 +243,8 @@ class frogger_game:
             #Per ogni nodo adiacente trovato
             for n in adiacenti:
                 #Se il nodo è già stato visitato non fare nulla
-                #if(cerca_nodo(visitati, n)):
-                #    continue
+                if(cerca_nodo(visitati, n)):
+                    continue
 
                 #Imposta i campi del nodo (F, G, H)
                 n.g = nodo_corrente.g + COSTO
@@ -339,7 +339,7 @@ def main():
             #action = game.simple_reactive()
             action = game.a_star_path_to_actions()
             
-            time.sleep(0.5)
+            time.sleep(0.1)
             lost, win = game.step(action)
 
 main()
