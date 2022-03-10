@@ -25,7 +25,6 @@ esplorare = PriorityQueue()
 visitati = PriorityQueue()
 #Costante costo
 COSTO = 1
-t = 0
 
 #Classe Nodo
 class Nodo():
@@ -56,7 +55,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -134,7 +133,8 @@ class frogger_game:
     def get_neighbors(self, nodo_corrente:Nodo):
         adjac_lis = []
 
-        self.aggiorna_campo(nodo_corrente.tempo + 1)
+        tempo = nodo_corrente.tempo + 1
+        self.aggiorna_campo(tempo)
 
         #Per ogni azione disponibile
         for action in range(5):
@@ -155,16 +155,16 @@ class frogger_game:
             #Se l'azione non porta alla perdita, aggiungi un nuovo nodo alla lista dei vicini
             if(mossa_buona):
                 #Imposta un nuovo nodo con la sua posizione e aggiungilo alla lista adiacenti
-                n = Nodo(pos, nodo_corrente, nodo_corrente.tempo + 1)
+                n = Nodo(pos, nodo_corrente, (tempo) % 16)
                 adjac_lis.append(n)
 
         #Ripristina lo stato precedente del gioco
-        self.aggiorna_campo(-nodo_corrente.tempo - 1)
+        self.aggiorna_campo(-tempo)
 
-        print("Lista adiacenze:")
-        for a in adjac_lis:
-            print(nodo_corrente.posizione, "->", a.posizione, end="|")
-        print()
+        #print("Lista adiacenze:")
+        #for a in adjac_lis:
+        #    print(nodo_corrente.posizione, "->", a.posizione, end="|")
+        #print()
 
         return adjac_lis
 
@@ -246,10 +246,10 @@ class frogger_game:
                 #Aggiungi il nodo alla lista da esplorare
                 esplorare.put((n.f, n))
                 
-                #print("Esplorare:")
-                #for e in esplorare.queue:
-                #    print(e[0], e[1].posizione, end="|")
-                #print()
+                print("Esplorare:")
+                for e in esplorare.queue:
+                    print(e[0], e[1].posizione, end="|")
+                print()
 
                 #---Torna ad esplorare i nodi adiacenti al corrente---#
             #---Esplora nuovi nodi, se ci sono---#
@@ -332,7 +332,7 @@ def main():
                     run = False
                     pygame.quit()
             
-            time.sleep(0.5)
+            time.sleep(0.1)
             lost, win = game.step(action)
 
 main()
