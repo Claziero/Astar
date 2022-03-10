@@ -41,9 +41,9 @@ class Nodo():
     #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione
     def __eq__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
-        return self.posizione == altro.posizione and self.h == altro.h
+        return self.posizione == altro.posizione and self.tempo == altro.tempo
 
-    #Ridefinizione del concetto di minore tra nodi: devono essere ad una riga superiore
+    #Ridefinizione del concetto di minore tra nodi: deve avere una f minore
     def __lt__(self, altro):
         assert(isinstance(altro, Nodo))
         return self.f < altro.f
@@ -75,11 +75,11 @@ class frogger_game:
         self.aggiorna_campo(1)
 
         if (action == 1):
-            self.frog_pos = (self.frog_pos[0], max(0, self.frog_pos[1] - 1))
+            self.frog_pos = (self.frog_pos[0], max(0, self.frog_pos[1] - 2))
         elif (action == 2):
             self.frog_pos = (max(0, self.frog_pos[0] - 1), self.frog_pos[1])
         elif (action == 3):
-            self.frog_pos = (self.frog_pos[0], min(15, self.frog_pos[1] + 1))
+            self.frog_pos = (self.frog_pos[0], min(15, self.frog_pos[1] + 2))
         elif (action == 4):
             self.frog_pos = (min(7, self.frog_pos[0] + 1), self.frog_pos[1])
 
@@ -141,11 +141,11 @@ class frogger_game:
             if(action == 0):    #NONE
                 pos = nodo_corrente.posizione
             elif(action == 1):  #LEFT
-                pos = (nodo_corrente.posizione[0], max(0, nodo_corrente.posizione[1] - 1))
+                pos = (nodo_corrente.posizione[0], max(0, nodo_corrente.posizione[1] - 2))
             elif(action == 2):  #UP
                 pos = (max(0, nodo_corrente.posizione[0] - 1), nodo_corrente.posizione[1])
             elif(action == 3):  #RIGHT
-                pos = (nodo_corrente.posizione[0], min(15, nodo_corrente.posizione[1] + 1))
+                pos = (nodo_corrente.posizione[0], min(15, nodo_corrente.posizione[1] + 2))
             elif(action == 4):  #DOWN
                 pos = (min(7, nodo_corrente.posizione[0] + 1), nodo_corrente.posizione[1])
 
