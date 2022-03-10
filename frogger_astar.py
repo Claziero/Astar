@@ -40,7 +40,7 @@ class Nodo():
     #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione
     def __eq__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
-        return self.posizione == altro.posizione and self.tempo == altro.tempo
+        return self.posizione == altro.posizione and self.tempo == altro.tempo #TBC
 
     #Ridefinizione del concetto di minore tra nodi: deve avere una f minore
     def __lt__(self, altro):
@@ -55,7 +55,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -133,7 +133,8 @@ class frogger_game:
     def get_neighbors(self, nodo_corrente:Nodo):
         adjac_lis = []
 
-        tempo = nodo_corrente.tempo + 1
+        #Incrementa il tempo e fai scorrere il campo
+        tempo = (nodo_corrente.tempo + 1) % 16
         self.aggiorna_campo(tempo)
 
         #Per ogni azione disponibile
@@ -155,7 +156,7 @@ class frogger_game:
             #Se l'azione non porta alla perdita, aggiungi un nuovo nodo alla lista dei vicini
             if(mossa_buona):
                 #Imposta un nuovo nodo con la sua posizione e aggiungilo alla lista adiacenti
-                n = Nodo(pos, nodo_corrente, (tempo) % 16)
+                n = Nodo(pos, nodo_corrente, tempo)
                 adjac_lis.append(n)
 
         #Ripristina lo stato precedente del gioco
@@ -255,7 +256,7 @@ class frogger_game:
             #---Esplora nuovi nodi, se ci sono---#
 
         #Se sei in questo punto, non hai trovato la soluzione
-        return False
+        return None
 
 #Funzione per cercare un nodo all'interno di una lista
 def cerca_nodo(lista:PriorityQueue, nodo:Nodo):
