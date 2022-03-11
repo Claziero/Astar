@@ -55,7 +55,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
+            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -178,7 +178,6 @@ class frogger_game:
 
     def a_star_path_to_actions(self):
         if not self.path:
-            #self.__init__()
             self.path = self.A_star_agent()
             self.path.pop(0)
 
@@ -203,11 +202,13 @@ class frogger_game:
 
         #---Inizia l'esplorazione---#
         #Finché la lista di nodi da esplorare non è vuota 
-        while(not esplorare.qsize == 0):
+        while(len(esplorare.queue) != 0):
             #Estrai il primo elemento (a costo minimo)
             nodo_corrente = esplorare.get()[1]
             #E inseriscilo nella lista di nodi visitati
             visitati.put(nodo_corrente) 
+            print("nodo:", nodo_corrente.posizione, "t:", nodo_corrente.tempo, "aggiunto a visitati")
+            #sleep(4)
 
             #Se il nodo corrente corrisponde all'obiettivo allora riporta il percorso fatto
             if(nodo_corrente.obiettivo()):
@@ -224,6 +225,10 @@ class frogger_game:
 
             #Altrimenti cerca i nodi adiacenti al nodo corrente
             adiacenti = self.get_neighbors(nodo_corrente)
+            print("adiacenti a", nodo_corrente.posizione, ":", end="")
+            for x in adiacenti: print(x.posizione, end="||")
+            print()
+            #sleep(4)
 
             #Per ogni nodo adiacente trovato
             for n in adiacenti:
@@ -239,23 +244,30 @@ class frogger_game:
                 #Controlla che il nodo da aggiungere (n) non sia già in esplorare
                 presente = cerca_nodo(esplorare, n)
                 if(presente is not False):
+                    print("nodo presente in esplorare:", presente.posizione)
+                    #sleep(4)
                     #Se c'è controlla che non abbia valore di G maggiore di quello già presente
-                    if(n.g > presente.g):
+                    if(n.g >= presente.g):
                         #Scarta il nodo
                         continue
 
                 #Aggiungi il nodo alla lista da esplorare
                 esplorare.put((n.f, n))
-                
-                print("Esplorare:")
-                for e in esplorare.queue:
-                    print(e[0], e[1].posizione, end="|")
-                print()
+                print("nodo:", n.posizione, "t:", n.tempo, "f:", n.f, "aggiunto a esplorare")
+                #sleep(4)
+            print("esplorare_size:", len(esplorare.queue))
+
+                #print("Esplorare:")
+                #for e in esplorare.queue:
+                #    print(e[0], e[1].posizione, end="|")
+                #print()
 
                 #---Torna ad esplorare i nodi adiacenti al corrente---#
             #---Esplora nuovi nodi, se ci sono---#
 
         #Se sei in questo punto, non hai trovato la soluzione
+        print("Soluzione non trovata. Terminazione del programma")
+        exit(1)
         return None
 
 #Funzione per cercare un nodo all'interno di una lista
