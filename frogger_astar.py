@@ -55,7 +55,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1], #[1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1]
+            [0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1], #[1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1],
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -251,7 +251,7 @@ class frogger_game:
 #Funzione per cercare un nodo all'interno di una lista
 def cerca_nodo(lista:PriorityQueue, nodo:Nodo):
     #Se la lista è vuota ritorna subito
-    if(lista.qsize == 0):
+    if(len(lista.queue) == 0):
         return False
 
     #Scorri tutti gli elementi
