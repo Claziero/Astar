@@ -37,7 +37,7 @@ class Nodo():
         self.precedente = precedente
         self.tempo = tempo
 
-    #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione
+    #Ridefinizione del concetto di uguaglianza tra nodi: devono essere nella stessa posizione allo stesso tempo
     def __eq__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
         return self.posizione == altro.posizione and self.tempo == altro.tempo #TBC
@@ -55,7 +55,7 @@ class frogger_game:
     def __init__(self):
         self.state_matrix = np.asarray([
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
+            [0, 1, 1, 0, 0, 0, 1, 1, 0, 0, 0, 1, 1, 1, 1, 1], #[1, 1, 1, 1, 1, 1, 1, 1, 0, 1, 1, 1, 1, 1, 1, 1]
             [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
             [0, 1, 1, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 0, 1, 1],
             [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
@@ -133,7 +133,7 @@ class frogger_game:
     def get_neighbors(self, nodo_corrente:Nodo):
         adjac_lis = []
 
-        #Incrementa il tempo e fai scorrere il campo
+        #Incrementa il tempo e fai scorrere il campo (tempo modulo larghezza della mappa)
         tempo = (nodo_corrente.tempo + 1) % 16
         self.aggiorna_campo(tempo)
 
@@ -161,12 +161,6 @@ class frogger_game:
 
         #Ripristina lo stato precedente del gioco
         self.aggiorna_campo(-tempo)
-
-        #print("Lista adiacenze:")
-        #for a in adjac_lis:
-        #    print(nodo_corrente.posizione, "->", a.posizione, end="|")
-        #print()
-
         return adjac_lis
 
     def h(self, n:Nodo): #H
@@ -207,8 +201,6 @@ class frogger_game:
             nodo_corrente = esplorare.get()[1]
             #E inseriscilo nella lista di nodi visitati
             visitati.put(nodo_corrente) 
-            print("nodo:", nodo_corrente.posizione, "t:", nodo_corrente.tempo, "aggiunto a visitati")
-            #sleep(4)
 
             #Se il nodo corrente corrisponde all'obiettivo allora riporta il percorso fatto
             if(nodo_corrente.obiettivo()):
@@ -225,10 +217,6 @@ class frogger_game:
 
             #Altrimenti cerca i nodi adiacenti al nodo corrente
             adiacenti = self.get_neighbors(nodo_corrente)
-            print("adiacenti a", nodo_corrente.posizione, ":", end="")
-            for x in adiacenti: print(x.posizione, end="||")
-            print()
-            #sleep(4)
 
             #Per ogni nodo adiacente trovato
             for n in adiacenti:
@@ -244,8 +232,6 @@ class frogger_game:
                 #Controlla che il nodo da aggiungere (n) non sia già in esplorare
                 presente = cerca_nodo(esplorare, n)
                 if(presente is not False):
-                    print("nodo presente in esplorare:", presente.posizione)
-                    #sleep(4)
                     #Se c'è controlla che non abbia valore di G maggiore di quello già presente
                     if(n.g >= presente.g):
                         #Scarta il nodo
@@ -253,14 +239,6 @@ class frogger_game:
 
                 #Aggiungi il nodo alla lista da esplorare
                 esplorare.put((n.f, n))
-                print("nodo:", n.posizione, "t:", n.tempo, "f:", n.f, "aggiunto a esplorare")
-                #sleep(4)
-            print("esplorare_size:", len(esplorare.queue))
-
-                #print("Esplorare:")
-                #for e in esplorare.queue:
-                #    print(e[0], e[1].posizione, end="|")
-                #print()
 
                 #---Torna ad esplorare i nodi adiacenti al corrente---#
             #---Esplora nuovi nodi, se ci sono---#
@@ -320,7 +298,7 @@ def main():
     lost = False
     win = False
 
-    t = int(random() * 8 + 1)
+    t = int(random() * 14 + 1)
     print("Random:", t)
     game.aggiorna_campo(t)
 
@@ -345,7 +323,7 @@ def main():
                     run = False
                     pygame.quit()
             
-            time.sleep(0.1)
+            time.sleep(0.5)
             lost, win = game.step(action)
 
 main()
