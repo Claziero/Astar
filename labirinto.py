@@ -1,6 +1,7 @@
 from Astar import Gioco, Nodo, Azione
 import string
 
+# Definizione costanti globali
 RIGHE = 4
 COLONNE = 4
 OBIETTIVO = (3, 4)
@@ -126,5 +127,3 @@ def main():
 
 
 main()  # Invocazione del programma principale
-
-
