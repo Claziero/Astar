@@ -44,7 +44,7 @@ class NodoL(Nodo):
 # Classe AzioneLabirinto (estensione della classe Azione di Astar)
 class AzioneL(Azione):
     # Costruttore
-    def __init__(self, costo=1, id=None) -> None:
+    def __init__(self, id=None) -> None:
         # Azioni possibili:
         # 1 = UP        (i-1, j)    costo = 1
         # 2 = DIAG.NE   (i-1, j+1)  costo = 2
@@ -88,7 +88,28 @@ class AzioneL(Azione):
         # Altrimenti riporta None
         return None
 
-    
+# Classe GiocoLabirinto (estensione della classe Gioco di Astar)
+class GiocoL(Gioco):
+    # Costruttore
+    def __init__(self) -> None:
+        # Definizione del nodo iniziale
+        self.nodoIniziale = NodoL(PARTENZA[0], PARTENZA[1])
+        
+        # Definizione di tutte le azioni possibili
+        self.azioniPossibili:list[AzioneL] = []
+        self.azioniPossibili.append(AzioneL(1))
+        self.azioniPossibili.append(AzioneL(2))
+        self.azioniPossibili.append(AzioneL(3))
+        self.azioniPossibili.append(AzioneL(4))
+        self.azioniPossibili.append(AzioneL(5))
+
+        # Definizione della matrice di gioco
+        matrice = [ [0, 0, 1, 0],
+                    [0, 1, 1, 0],
+                    [0, 0, 1, 0],
+                    [0, 0, 0, 0] ]
+        
+        return
 
 
 
