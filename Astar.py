@@ -162,7 +162,7 @@ class Gioco():
 def cerca_nodo(lista:PriorityQueue, nodo:Nodo) -> Nodo:
     # Se la lista è vuota ritorna subito
     if len(lista.queue) == 0:
-        return False
+        return None
 
     # Scorri tutti gli elementi
     for n in lista.queue:

@@ -3,7 +3,6 @@ import string
 
 RIGHE = 4
 COLONNE = 4
-matrice:list[list[int]]
 OBIETTIVO = (3, 4)
 PARTENZA = (3, 1)
 
@@ -24,7 +23,8 @@ class NodoL(Nodo):
     def valido(self) -> bool:
         # Uno stato è valido se la posizione è libera e non c'è un muro
         # e se la posizione rientra nei confini della mappa
-        return matrice[self.i][self.j] != 1 and 1 <= self.i <= RIGHE and 1 <= self.j <= COLONNE
+        return 1 <= self.i <= RIGHE and 1 <= self.j <= COLONNE\
+            and matrice[self.i-1][self.j-1] != 1
 
     # Funzione euristica
     def H(self) -> int:
@@ -104,6 +104,7 @@ class GiocoL(Gioco):
         self.azioniPossibili.append(AzioneL(5))
 
         # Definizione della matrice di gioco
+        global matrice
         matrice = [ [0, 0, 1, 0],
                     [0, 1, 1, 0],
                     [0, 0, 1, 0],
@@ -111,6 +112,19 @@ class GiocoL(Gioco):
         
         return
 
+# Funzione main
+def main():
+    # Crea un'istanza del gioco
+    gioco = GiocoL()
 
+    # Richiama l'algoritmo A*
+    percorso = gioco.astar_algo()
+
+    # Se è stato restituito un percorso allora stampalo
+    if percorso is not None:
+        print("Soluzione:", percorso)
+
+
+main()  # Invocazione del programma principale
 
 
