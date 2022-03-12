@@ -25,7 +25,7 @@ class Nodo():
 
     # Ridefinizione del concetto di minore tra nodi: 
     # il più piccolo deve avere una f minore
-    def __lt__(self, altro):
+    def __lt__(self, altro) -> bool:
         assert(isinstance(altro, Nodo))
         return self.f < altro.f
 
@@ -39,7 +39,8 @@ class Nodo():
         # Inserire qui
         return None
 
-    # Euristica
+    # Funzione euristica: restituisce una stima dei passi 
+    # da compiere per arrivare all'obiettivo
     def H(self) -> int:
         # Inserire qui
         return None
@@ -68,6 +69,7 @@ class Gioco():
         self.azioniPossibili:list[Azione] = ap
 
     # Funzione per trovare i nodi adiacenti al nodo passato come parametro
+    # Restituisce una lista di nodi
     def cerca_adiacenti(self, nodoCorrente:Nodo) -> list[Nodo]:
         adiacenti:list[Nodo] = []
 
@@ -83,7 +85,9 @@ class Gioco():
         return adiacenti
 
     # Implementazione di A*
-    def astar_algo(self):
+    # Restituisce una lista di posizioni nella mappa dalla partenza all'obiettivo
+    # oppure None se non c'è soluzione al problema
+    def astar_algo(self) -> list[list[int]]:
         # Aggiungi il nodo iniziale alla coda esplorare, con costo 0
         esplorare.put((0, self.nodoIniziale))
 
@@ -99,7 +103,7 @@ class Gioco():
             if NodoCorrente.obiettivo():
                 print("Soluzione trovata")
                 # Ricostruisci il percorso dalla fine verso l'inizio
-                percorso = []
+                percorso:list[list[int]] = []
                 while NodoCorrente is not None:
                     percorso.append(NodoCorrente.posizione)
                     NodoCorrente = NodoCorrente.precedente
@@ -114,12 +118,12 @@ class Gioco():
             # Per ogni nodo adiacente trovato
             for n in adiacenti:
                 # Se il nodo è già stato visitato non fare nulla
-                if cerca_nodo(visitati, n):
+                if cerca_nodo(visitati, n) is not None:
                     continue
 
                 # Controlla che il nodo da aggiungere (n) non sia già in esplorare
                 presente = cerca_nodo(esplorare, n)
-                if presente is not False:
+                if presente is not None:
                     # Se c'è controlla che non abbia valore di G maggiore o uguale di quello già presente
                     if n.g >= presente.g:
                         # Scarta il nodo
@@ -136,7 +140,8 @@ class Gioco():
         return None
 
 # Funzione ausiliaria per cercare un nodo all'interno di una lista
-def cerca_nodo(lista:PriorityQueue, nodo:Nodo):
+# Restituisce il nodo trovato oppure None
+def cerca_nodo(lista:PriorityQueue, nodo:Nodo) -> Nodo:
     # Se la lista è vuota ritorna subito
     if len(lista.queue) == 0:
         return False
@@ -151,4 +156,4 @@ def cerca_nodo(lista:PriorityQueue, nodo:Nodo):
             return n
     
     # Il nodo non è stato trovato
-    return False
+    return None
