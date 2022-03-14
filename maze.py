@@ -1,3 +1,4 @@
+from math import sqrt
 from Astar import Gioco, Nodo, Azione
 import string
 from pyamaze import maze, agent
@@ -28,7 +29,7 @@ class NodoL(Nodo):
     # Funzione euristica
     def H(self) -> int:
         # Riporta la distanza euclidea tra il nodo e l'obiettivo
-        return (OBIETTIVO[0] - self.pos[0])**2 + (OBIETTIVO[1] - self.pos[1])**2
+        return sqrt((OBIETTIVO[0] - self.pos[0])**2 + (OBIETTIVO[1] - self.pos[1])**2)
 
     # Ridefinizione del concetto di uguaglianza tra nodi
     def __eq__(self, altro) -> bool:
